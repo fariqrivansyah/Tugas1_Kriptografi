@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Crypto Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="bg-dark text-light">
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                <i class="fa-solid fa-shield-halved text-info"></i>
+
+                Crypto Security Dashboard
+
+            </h1>
+
+            <p class="text-secondary">
+
+                Classical Cryptography Simulation System
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <button class="btn btn-warning me-2"
+                    onclick="toggleTheme()">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+            <a href="/history"
+               class="btn btn-outline-info">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN CARD -->
+
+    <div class="card bg-secondary p-4 shadow-lg border-0 rounded-4">
+
+        <form method="POST">
+
+            <!-- INPUT TEXT -->
+
+            <div class="mb-4">
+
+                <label class="form-label fw-bold">
+
+                    Input Text
+
+                </label>
+
+                <textarea
+                    class="form-control"
+                    rows="5"
+                    name="text"
+                    placeholder="Masukkan pesan..."
+                    required></textarea>
+
+            </div>
+
+            <!-- SELECT -->
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Algorithm
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="algorithm"
+                        id="algorithm"
+                        onchange="showFields()">
+
+                        <option value="caesar">
+                            Caesar Cipher
+                        </option>
+
+                        <option value="vigenere">
+                            Vigenere Cipher
+                        </option>
+
+                        <option value="affine">
+                            Affine Cipher
+                        </option>
+
+                        <option value="hill">
+                            Hill Cipher
+                        </option>
+
+                        <option value="playfair">
+                            Playfair Cipher
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Mode
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="mode">
+
+                        <option value="encrypt">
+                            Encrypt
+                        </option>
+
+                        <option value="decrypt">
+                            Decrypt
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- SINGLE KEY -->
+
+            <div id="singleKey" class="mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Key
+
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="key"
+                    placeholder="Masukkan key">
+
+            </div>
+
+            <!-- AFFINE -->
+
+            <div id="affineFields"
+                 style="display:none;"
+                 class="mb-3">
+
+                <label class="form-label fw-bold mb-2">
+
+                    Affine Key
+
+                </label>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="a"
+                            placeholder="Nilai a">
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="b"
+                            placeholder="Nilai b">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- HILL -->
+
+            <div id="hillField"
+                 style="display:none;"
+                 class="mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Matrix Key
+
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="matrix"
+                    placeholder="Contoh: 2,3;1,4">
+
+                <small class="text-warning">
+
+                    Format 2x2:
+                    2,3;1,4
+
+                    <br>
+
+                    Format 3x3:
+                    6,24,1;13,16,10;20,17,15
+
+                </small>
+
+            </div>
+
+            <!-- NOTE -->
+
+            <div class="alert alert-dark mt-3">
+
+                <strong>Catatan:</strong>
+
+                Hill & Playfair Cipher otomatis
+                menghapus spasi dan simbol
+                sesuai aturan algoritma klasik.
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button class="btn btn-info w-100 mt-3 py-3 fw-bold">
+
+                <i class="fa-solid fa-lock"></i>
+
+                Execute Cryptography
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- RESULT -->
+
+    {% if result %}
+
+    <div class="card bg-secondary mt-4 p-4 shadow-lg border-0 rounded-4">
+
+        <!-- RESULT -->
+
+        <h3 class="mb-3">
+
+            <i class="fa-solid fa-key text-success"></i>
+
+            Encryption Result
+
+        </h3>
+
+        <div class="alert alert-success fs-5">
+
+            {{ result }}
+
+        </div>
+
+        <!-- FORMULA -->
+
+        <div class="card bg-dark text-light p-3 mb-4">
+
+            <h5 class="text-info">
+
+                Rumus Matematis
+
+            </h5>
+
+            {% if algorithm == "caesar" %}
+
+                <p>E(x) = (x + k) mod 26</p>
+
+            {% elif algorithm == "vigenere" %}
+
+                <p>Cᵢ = (Pᵢ + Kᵢ) mod 26</p>
+
+            {% elif algorithm == "affine" %}
+
+                <p>E(x) = (ax + b) mod 26</p>
+
+            {% elif algorithm == "hill" %}
+
+                <p>C = K × P mod 26</p>
+
+            {% elif algorithm == "playfair" %}
+
+                <p>Encrypt pasangan huruf menggunakan matrix 5x5</p>
+
+            {% endif %}
+
+        </div>
+
+        <!-- STEP -->
+
+        <h4 class="mb-3">
+
+            Step-by-Step Process
+
+        </h4>
+
+        {% for p in process %}
+
+            <!-- HILL MATRIX -->
+
+            {% if p is mapping and p.type == "matrix" %}
+
+            <div class="card bg-dark border-0 shadow-lg rounded-4 p-4 mb-4">
+
+                <h5 class="text-info mb-3">
+
+                    <i class="fa-solid fa-table"></i>
+
+                    Hill Cipher Matrix
+
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-dark text-center align-middle">
+
+                        <tbody>
+
+                            {% for row in p.matrix %}
+
+                            <tr>
+
+                                {% for col in row %}
+
+                                <td class="fw-bold fs-5">
+
+                                    {{ col }}
+
+                                </td>
+
+                                {% endfor %}
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- PLAYFAIR MATRIX -->
+
+            {% elif p is mapping and p.type == "playfair_matrix" %}
+
+            <div class="card bg-dark border-0 shadow-lg rounded-4 p-4 mb-4">
+
+                <h5 class="text-warning mb-3">
+
+                    <i class="fa-solid fa-border-all"></i>
+
+                    Playfair 5x5 Matrix
+
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-dark text-center align-middle">
+
+                        <tbody>
+
+                            {% for row in p.matrix %}
+
+                            <tr>
+
+                                {% for col in row %}
+
+                                <td class="fw-bold fs-5 text-info">
+
+                                    {{ col }}
+
+                                </td>
+
+                                {% endfor %}
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- NORMAL PROCESS -->
+
+            {% else %}
+
+            <div class="alert alert-dark border-start border-info border-4 shadow-sm">
+
+                <pre class="mb-0 text-light"
+                     style="white-space: pre-wrap; font-family: Consolas;">
+
+{{ p }}
+
+                </pre>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: #0a0f1f;
+    color: white;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body.light-mode {
+    background: #f4f7fb;
+    color: #111;
+}
+
+.sidebar {
+    width: 260px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    color: #00ffe5;
+    margin-bottom: 50px;
+    font-weight: bold;
+}
+
+.menu {
+    list-style: none;
+}
+
+.menu li {
+    margin-bottom: 20px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    transition: 0.3s;
+}

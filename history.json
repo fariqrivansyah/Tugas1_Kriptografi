@@ -1,0 +1,14 @@
+[
+    {
+        "algorithm": "caesar",
+        "mode": "encrypt",
+        "text": "HALLO",
+        "result": "Key Caesar harus antara 1 sampai 25"
+    },
+    {
+        "algorithm": "caesar",
+        "mode": "encrypt",
+        "text": "HELLO",
+        "result": "MJQQT"
+    }
+]
